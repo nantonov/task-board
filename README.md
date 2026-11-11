@@ -31,26 +31,30 @@ cd ui && npm ci && npm run build && npm run start
 Then open http://localhost:3000. The SQLite file is created on first start at
 `backend/TaskBoard.Api/data/board.db` (git-ignored). `npm run dev` works too for UI work.
 
-The MCP server is not started by hand: the agent's host launches it over stdio. Build it
-once so the host can start the compiled binary quickly:
+The MCP server is not started by hand: the agent's host launches it over stdio. Publish it
+to a folder outside `bin/`. A running server locks its dll, so a host that started it from
+`bin/Debug` would make the next `dotnet build` fail.
 
 ```bash
-dotnet build mcp-server/TaskBoard.Mcp
+dotnet publish mcp-server/TaskBoard.Mcp -c Release -o <tools-folder>/task-board-mcp
 ```
 
-Register it with Claude Code from the folder the sessions start in (for the kit, the
-workspace root, never inside this repo), e.g. in that folder's `.mcp.json`:
+Register it with Claude Code in the folder your sessions start in. With the Outstaff kit
+that is the workspace root, never inside this repo. Put it in that folder's `.mcp.json`:
 
 ```json
 {
   "mcpServers": {
     "task-board": {
       "command": "dotnet",
-      "args": ["<path-to-this-repo>/mcp-server/TaskBoard.Mcp/bin/Debug/net10.0/TaskBoard.Mcp.dll"]
+      "args": ["<tools-folder>/task-board-mcp/TaskBoard.Mcp.dll"],
+      "env": { "BOARD_API_URL": "http://127.0.0.1:5080/" }
     }
   }
 }
 ```
+
+After changing the MCP server, publish again and reconnect it in the host (`/mcp`).
 
 Tools: `create_task(key, title, description)`, `move_task(key, status)` with status
 `ToDo | InProgress | Done`, `list_tasks()`. A failed write (backend down, unknown key,
