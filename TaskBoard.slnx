@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/backend/">
+    <Project Path="backend/TaskBoard.Api/TaskBoard.Api.csproj" />
+  </Folder>
+  <Folder Name="/mcp-server/">
+    <Project Path="mcp-server/TaskBoard.Mcp/TaskBoard.Mcp.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/TaskBoard.Api.Tests/TaskBoard.Api.Tests.csproj" />
+    <Project Path="tests/TaskBoard.Mcp.Tests/TaskBoard.Mcp.Tests.csproj" />
+  </Folder>
+</Solution>
